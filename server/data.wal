@@ -5,3 +5,8 @@ SET persistent hello
 SET session abc
 EXPIRE session 3
 DEL session
+SET name ananya
+SET session abc
+EXPIRE session 10
+EXPIRE name 30
+DEL session
