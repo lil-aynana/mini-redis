@@ -1,0 +1,7 @@
+SET foo bar
+DEL foo
+SET persistent hello
+SET persistent hello
+SET session abc
+EXPIRE session 3
+DEL session
