@@ -8,7 +8,7 @@ The project was built incrementally to understand the core systems concepts behi
 
 ---
 
-## 🚀 Features
+## Features
 
 ### Core Storage
 
@@ -66,7 +66,7 @@ The project was built incrementally to understand the core systems concepts behi
 
 ---
 
-# 🏗️ Architecture
+# Architecture
 
 The system consists of clients, a router, distributed storage nodes, replication, and local storage components.
 
