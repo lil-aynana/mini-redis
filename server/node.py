@@ -85,10 +85,8 @@ class Node:
             conn.close()
 
     def _dispatch(self, line: str) -> str:
-        parts = line.split(" ", 2)  # command, key, rest-of-line-as-value
-        cmd = parts[0].upper()
-
-        
+        parts = line.split(" ", 3)  # command, key, rest-of-line-as-value
+        cmd = parts[0].upper()       
 
         try:
             if cmd == "PING":
@@ -109,6 +107,22 @@ class Node:
                 self.store.set(key, value)
                 return "+OK"
 
+            elif cmd == "REPLSET":
+                if len(parts) < 4:
+                    return "-ERR usage: REPLSET <key> <value> <version>"
+
+                _, key, value, version_text = parts
+
+                try:
+                    version = int(version_text)
+                except ValueError:
+                    return "-ERR invalid version"
+
+                applied=self.store.set_replica(key,value,version)
+
+                if applied:
+                    return "+OK"  
+
             elif cmd == "GET":
                 if len(parts) < 2:
                     return "-ERR usage: GET <key>"
@@ -123,11 +137,27 @@ class Node:
                 deleted = self.store.delete(key)
                 return ":1" if deleted else ":0"
 
+            elif cmd == "KEYS":
+
+                keys = self.store.keys()
+
+                return "+" + ",".join(keys)
+
             elif cmd == "EXISTS":
                 if len(parts) < 2:
                     return "-ERR usage: EXISTS <key>"
                 key = parts[1]
                 return ":1" if self.store.exists(key) else ":0"
+
+            elif cmd=="VERSION":
+                if len(parts) != 2:
+                    return "-ERR usage: VERSION <key>"
+
+                key = parts[1]
+
+                version = self.store.get_version(key)
+
+                return f":{version}"
 
             elif cmd == "EXPIRE":
                 if len(parts) != 3:

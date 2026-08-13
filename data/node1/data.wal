@@ -34,3 +34,8 @@ SET user:94 Ananya94
 SET user:96 Ananya96
 SET user:97 Ananya97
 SET user:98 Ananya98
+SET replication_test hello_replica
+SET version_test hello 1
+SET version_test world 2
+SET versioned_replication_test first 1
+SET versioned_replication_test second 2

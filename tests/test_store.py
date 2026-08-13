@@ -8,6 +8,7 @@ Run with:  python3 -m pytest tests/test_store.py -v
 import os
 import sys
 import unittest
+import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "server"))
 
@@ -16,7 +17,8 @@ from store import Store  # noqa: E402
 
 class TestStore(unittest.TestCase):
     def setUp(self):
-        self.store = Store()
+        self.wal_file = tempfile.mktemp()
+        self.store = Store(wal_file=self.wal_file)
 
     def test_set_then_get(self):
         self.store.set("foo", "bar")

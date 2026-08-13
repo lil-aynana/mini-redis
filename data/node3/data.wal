@@ -26,3 +26,5 @@ SET user:91 Ananya91
 SET user:92 Ananya92
 SET user:93 Ananya93
 SET user:95 Ananya95
+SET versioned_replication_test first 1
+SET versioned_replication_test second 2
