@@ -65,39 +65,11 @@ The project was built incrementally to understand the core systems concepts behi
 - Node restart/rejoin tests
 
 ---
-###To start a server:
 
--python3 server/node.py --port 6380 --node-id node1
--python3 server/node.py --port 6381 --node-id node2
--python3 server/node.py --port 6382 --node-id node3
+# Quick Start
 
-# Architecture
+## 1. Clone the Repository
 
-The system consists of clients, a router, distributed storage nodes, replication, and local storage components.
-
-```text
-                         Clients
-                            │
-                            │ TCP
-                            ▼
-                     ┌──────────────┐
-                     │    Router    │
-                     │              │
-                     │ Hash Ring     │
-                     │ Routing      │
-                     │ Failover     │
-                     └──────┬───────┘
-                            │
-              ┌─────────────┼─────────────┐
-              │             │             │
-              ▼             ▼             ▼
-          ┌───────┐     ┌───────┐     ┌───────┐
-          │ Node1 │     │ Node2 │     │ Node3 │
-          └───┬───┘     └───┬───┘     └───┬───┘
-              │             │             │
-              ▼             ▼             ▼
-           Store          Store          Store
-              │             │             │
-        ┌─────┼─────┐ ┌─────┼─────┐ ┌─────┼─────┐
-        ▼     ▼     ▼ ▼     ▼     ▼ ▼     ▼     ▼
-       WAL   TTL   LRU WAL   TTL   LRU WAL   TTL   LRU
+```bash
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+cd mini-redis
