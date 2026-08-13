@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Runtime data
+*.wal
+data/
+
+# Windows metadata
+*.Zone.Identifier
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store

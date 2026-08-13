@@ -70,6 +70,9 @@ class Router:
             f"NODE DOWN: {node} removed from hash ring"
         )
 
+    # --------------------------------------------------
+    # Get version from primary
+    # --------------------------------------------------
 
     def _get_version(self, node_name, key):
 
@@ -110,7 +113,6 @@ class Router:
 
         if cmd in ("GET", "EXISTS"):
 
-            # Try primary first
             try:
 
                 return self._send_to_node(
@@ -129,10 +131,8 @@ class Router:
                     f"reading {key} from replica {replica}"
                 )
 
-                # Mark primary as failed
                 self.mark_node_failed(primary)
 
-                # Try replica
                 try:
 
                     response = self._send_to_node(
@@ -193,7 +193,10 @@ class Router:
 
             value = parts[2]
 
-            version=self._get_version(primary,key)
+            version = self._get_version(
+                primary,
+                key
+            )
 
             replica_command = (
                 f"REPLSET {key} {value} {version}"
@@ -206,7 +209,10 @@ class Router:
                     replica_command
                 )
 
-                if replica_response not in ("+OK", "+IGNORED"):
+                if replica_response not in (
+                    "+OK",
+                    "+IGNORED"
+                ):
 
                     print(
                         f"WARNING: replication failed "
@@ -224,5 +230,49 @@ class Router:
                     f"WARNING: replica {replica} unavailable "
                     f"for key={key}"
                 )
+
+        # --------------------------------------------------
+        # EXPIRE replication
+        # --------------------------------------------------
+
+        elif cmd == "EXPIRE":
+
+            if len(parts) != 3:
+                return "-ERR usage: EXPIRE <key> <seconds>"
+
+            try:
+                int(parts[2])
+            except ValueError:
+                return "-ERR invalid seconds"
+
+            # Primary already executed EXPIRE above.
+            # Only replicate if it succeeded.
+            if response == ":1":
+
+                try:
+
+                    replica_response = self._send_to_node(
+                        replica,
+                        command
+                    )
+
+                    if replica_response != ":1":
+
+                        print(
+                            f"WARNING: EXPIRE replication "
+                            f"failed for key={key}, "
+                            f"replica={replica}"
+                        )
+
+                except (
+                    ConnectionRefusedError,
+                    TimeoutError,
+                    OSError
+                ):
+
+                    print(
+                        f"WARNING: replica {replica} unavailable "
+                        f"for EXPIRE key={key}"
+                    )
 
         return response
