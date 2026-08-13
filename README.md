@@ -65,10 +65,11 @@ The project was built incrementally to understand the core systems concepts behi
 - Node restart/rejoin tests
 
 ---
-To start a server:
->python3 server/node.py --port 6380 --node-id node1
->python3 server/node.py --port 6381 --node-id node2
->python3 server/node.py --port 6382 --node-id node3
+###To start a server:
+
+-python3 server/node.py --port 6380 --node-id node1
+-python3 server/node.py --port 6381 --node-id node2
+-python3 server/node.py --port 6382 --node-id node3
 
 # Architecture
 
