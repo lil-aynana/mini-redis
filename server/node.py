@@ -34,14 +34,17 @@ import socket
 import threading
 
 from store import Store
+from pathlib import Path
 
 
 class Node:
     def __init__(self, host: str = "0.0.0.0", port: int = 6380, node_id: str = "node1"):
         self.host = host
         self.port = port
-        self.node_id = node_id
-        self.store = Store()
+        self.node_id=node_id
+        project_root = Path(__file__).resolve().parent.parent
+        wal_file = project_root / "data" / node_id / "data.wal"
+        self.store = Store(wal_file=wal_file)
         self._server_socket: socket.socket | None = None
 
     def start(self) -> None:
@@ -85,9 +88,19 @@ class Node:
         parts = line.split(" ", 2)  # command, key, rest-of-line-as-value
         cmd = parts[0].upper()
 
+        
+
         try:
             if cmd == "PING":
                 return "+PONG"
+
+            if cmd == "INFO":
+                return (
+                    f"node_id={self.node_id} "
+                    f"host={self.host} "
+                    f"port={self.port} "
+                    f"keys={self.store.size()}"
+                )
 
             elif cmd == "SET":
                 if len(parts) < 3:

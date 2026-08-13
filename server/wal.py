@@ -6,6 +6,11 @@ class WAL:
     def __init__(self, filename="data.wal"):
         self.filename = filename
 
+        directory = os.path.dirname(self.filename)
+
+        if directory:
+            os.makedirs(directory, exist_ok=True)
+
     def append(self, command):
         with open(self.filename, "a") as file:
             file.write(command + "\n")
